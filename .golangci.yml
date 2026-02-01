@@ -1,0 +1,24 @@
+linters:
+  enable:
+    - errcheck
+    - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - unused
+
+linters-settings:
+  errcheck:
+    exclude-functions:
+      - (io.Writer).Write
+      - fmt.Fprint
+      - fmt.Fprintf
+      - fmt.Fprintln
+      - (*github.com/urfave/cli/v2.Context).Set
+
+issues:
+  exclude-rules:
+    # Ignore unchecked errors in test files
+    - path: _test\.go
+      linters:
+        - errcheck
