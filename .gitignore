@@ -6,7 +6,6 @@ PLAN.md
 *.exe
 
 # Go
-go.sum
 
 # IDE
 .idea/
