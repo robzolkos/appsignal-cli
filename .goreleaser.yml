@@ -1,0 +1,51 @@
+project_name: appsignal-cli
+
+builds:
+  - main: ./cmd/appsignal
+    binary: appsignal
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w -X main.version={{.Version}}
+
+brews:
+  - repository:
+      owner: robzolkos
+      name: homebrew-tap
+    homepage: https://github.com/robzolkos/appsignal-cli
+    description: CLI for AppSignal error monitoring
+
+aurs:
+  - name: appsignal-cli
+    homepage: https://github.com/robzolkos/appsignal-cli
+    description: CLI for AppSignal error monitoring
+    maintainers:
+      - 'robzolkos'
+    license: MIT
+    private_key: '{{ .Env.AUR_KEY }}'
+    git_url: 'ssh://aur@aur.archlinux.org/appsignal-cli.git'
+
+nfpms:
+  - package_name: appsignal-cli
+    homepage: https://github.com/robzolkos/appsignal-cli
+    maintainer: Rob Zolkos
+    description: CLI for AppSignal error monitoring
+    license: MIT
+    formats:
+      - deb
+      - rpm
+
+archives:
+  - format: tar.gz
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+
+checksum:
+  name_template: 'checksums.txt'
+
+changelog:
+  sort: asc

@@ -1,0 +1,17 @@
+# Plan contains credentials
+PLAN.md
+
+# Binaries
+/appsignal
+*.exe
+
+# Go
+go.sum
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
