@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"io"
 	"net/url"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/robzolkos/appsignal-cli/internal/models"
@@ -166,13 +168,9 @@ type restSampleDetail struct {
 	Params    map[string]any `json:"params"`
 	Session   map[string]any `json:"session_data"`
 	Exception *struct {
-		Name      string `json:"name"`
-		Message   string `json:"message"`
-		Backtrace []struct {
-			Line   int    `json:"line"`
-			File   string `json:"file"`
-			Method string `json:"method"`
-		} `json:"backtrace"`
+		Name      string   `json:"name"`
+		Message   string   `json:"message"`
+		Backtrace []string `json:"backtrace"`
 	} `json:"exception"`
 	Environment map[string]string `json:"environment"`
 }
@@ -203,11 +201,22 @@ func (s restSampleDetail) toSample() models.Sample {
 			Message: s.Exception.Message,
 		}
 		for _, bt := range s.Exception.Backtrace {
-			sample.Exception.Backtrace = append(sample.Exception.Backtrace, models.BacktraceLine{
-				Line:   bt.Line,
-				Path:   bt.File,
-				Method: bt.Method,
-			})
+			// Parse backtrace string format: "method@file:line:column" or just "file:line"
+			line := models.BacktraceLine{Path: bt}
+			if atIdx := strings.LastIndex(bt, "@"); atIdx != -1 {
+				line.Method = bt[:atIdx]
+				line.Path = bt[atIdx+1:]
+			}
+			// Try to extract line number from path like "file.js:19:265686"
+			if colonIdx := strings.LastIndex(line.Path, ":"); colonIdx != -1 {
+				if secondColonIdx := strings.LastIndex(line.Path[:colonIdx], ":"); secondColonIdx != -1 {
+					if lineNum, err := strconv.Atoi(line.Path[secondColonIdx+1 : colonIdx]); err == nil {
+						line.Line = lineNum
+						line.Path = line.Path[:secondColonIdx]
+					}
+				}
+			}
+			sample.Exception.Backtrace = append(sample.Exception.Backtrace, line)
 		}
 	}
 
