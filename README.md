@@ -224,6 +224,20 @@ Backtrace:
 | 3 | Resource not found |
 | 4 | API error |
 
+## AI Agent Skill
+
+This CLI includes a skill for AI coding agents (Claude Code, Cursor, etc.) that teaches them how to fetch and analyze AppSignal errors.
+
+### Install the Skill
+
+```bash
+npx skills add robzolkos/appsignal-cli
+```
+
+Once installed, your AI agent can automatically use the CLI to investigate errors, fetch incident details, and help debug issues in your codebase.
+
+See [skills/appsignal/SKILL.md](skills/appsignal/SKILL.md) for the full skill definition.
+
 ## Development
 
 ```bash
