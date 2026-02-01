@@ -90,6 +90,17 @@ func (f *CompactFormatter) FormatSample(w io.Writer, sample *models.Sample) erro
 	return nil
 }
 
+// FormatApps formats a list of apps in compact format
+func (f *CompactFormatter) FormatApps(w io.Writer, apps *models.AppList) error {
+	for _, org := range apps.Organizations {
+		fmt.Fprintf(w, "[%s] %s\n", org.Slug, org.Name)
+		for _, app := range org.Apps {
+			fmt.Fprintf(w, "  %s %s\n", app.ID, app.Name)
+		}
+	}
+	return nil
+}
+
 // FormatMessage formats a message in compact format
 func (f *CompactFormatter) FormatMessage(w io.Writer, message string) error {
 	fmt.Fprintln(w, message)

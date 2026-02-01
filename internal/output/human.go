@@ -270,6 +270,34 @@ func (f *HumanFormatter) FormatSample(w io.Writer, sample *models.Sample) error 
 	return nil
 }
 
+// FormatApps formats a list of apps
+func (f *HumanFormatter) FormatApps(w io.Writer, apps *models.AppList) error {
+	if len(apps.Organizations) == 0 {
+		fmt.Fprintln(w, "No organizations found.")
+		return nil
+	}
+
+	for i, org := range apps.Organizations {
+		if i > 0 {
+			fmt.Fprintln(w)
+		}
+		fmt.Fprintf(w, "%s %s\n", f.color(colorBold, "ORGANIZATION"), org.Name)
+		fmt.Fprintf(w, "Slug: %s\n", org.Slug)
+		fmt.Fprintf(w, "ID: %s\n", f.color(colorDim, org.ID))
+
+		if len(org.Apps) > 0 {
+			fmt.Fprintln(w)
+			fmt.Fprintf(w, "%s\n", f.color(colorBold, "Apps:"))
+			for _, app := range org.Apps {
+				fmt.Fprintf(w, "  %s\n", f.color(colorCyan, app.Name))
+				fmt.Fprintf(w, "    ID: %s\n", f.color(colorDim, app.ID))
+			}
+		}
+	}
+
+	return nil
+}
+
 // FormatMessage formats a simple message
 func (f *HumanFormatter) FormatMessage(w io.Writer, message string) error {
 	fmt.Fprintln(w, message)

@@ -273,3 +273,65 @@ func (n sampleNode) toSample() models.Sample {
 
 	return sample
 }
+
+const listAppsQuery = `
+query ViewerApps {
+  viewer {
+    organizations {
+      id
+      slug
+      name
+      apps {
+        id
+        name
+      }
+    }
+  }
+}
+`
+
+// ListApps lists all apps accessible to the current token
+func (c *Client) ListApps() (*models.AppList, error) {
+	resp, err := c.doGraphQL(GraphQLRequest{
+		Query: listAppsQuery,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	var result struct {
+		Viewer struct {
+			Organizations []struct {
+				ID   string `json:"id"`
+				Slug string `json:"slug"`
+				Name string `json:"name"`
+				Apps []struct {
+					ID   string `json:"id"`
+					Name string `json:"name"`
+				} `json:"apps"`
+			} `json:"organizations"`
+		} `json:"viewer"`
+	}
+
+	if err := json.Unmarshal(resp.Data, &result); err != nil {
+		return nil, fmt.Errorf("failed to parse apps: %w", err)
+	}
+
+	appList := &models.AppList{}
+	for _, org := range result.Viewer.Organizations {
+		organization := models.Organization{
+			ID:   org.ID,
+			Slug: org.Slug,
+			Name: org.Name,
+		}
+		for _, app := range org.Apps {
+			organization.Apps = append(organization.Apps, models.App{
+				ID:   app.ID,
+				Name: app.Name,
+			})
+		}
+		appList.Organizations = append(appList.Organizations, organization)
+	}
+
+	return appList, nil
+}

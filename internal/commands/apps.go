@@ -1,7 +1,7 @@
 package commands
 
 import (
-	"fmt"
+	"os"
 
 	"github.com/urfave/cli/v2"
 )
@@ -10,11 +10,20 @@ import (
 func AppsCommand() *cli.Command {
 	return &cli.Command{
 		Name:  "apps",
-		Usage: "List applications (requires org-level access)",
+		Usage: "List applications",
 		Action: func(c *cli.Context) error {
-			// Apps list requires organization-level API access
-			// which is not available with regular app tokens
-			return fmt.Errorf("apps list requires organization-level API access, which is not yet implemented")
+			client, err := getClient(c)
+			if err != nil {
+				return err
+			}
+
+			apps, err := client.ListApps()
+			if err != nil {
+				return handleError(err)
+			}
+
+			formatter := getFormatter(c)
+			return formatter.FormatApps(os.Stdout, apps)
 		},
 	}
 }

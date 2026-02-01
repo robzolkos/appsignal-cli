@@ -12,6 +12,7 @@ type Formatter interface {
 	FormatIncident(w io.Writer, incident *models.Incident) error
 	FormatSampleList(w io.Writer, samples *models.SampleList) error
 	FormatSample(w io.Writer, sample *models.Sample) error
+	FormatApps(w io.Writer, apps *models.AppList) error
 	FormatMessage(w io.Writer, message string) error
 }
 

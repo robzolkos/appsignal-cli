@@ -30,6 +30,11 @@ func (f *JSONFormatter) FormatSample(w io.Writer, sample *models.Sample) error {
 	return json.NewEncoder(w).Encode(sample)
 }
 
+// FormatApps formats a list of apps as JSON
+func (f *JSONFormatter) FormatApps(w io.Writer, apps *models.AppList) error {
+	return json.NewEncoder(w).Encode(apps)
+}
+
 // FormatMessage formats a message as JSON
 func (f *JSONFormatter) FormatMessage(w io.Writer, message string) error {
 	return json.NewEncoder(w).Encode(map[string]string{"message": message})
