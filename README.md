@@ -47,7 +47,20 @@ output:
 Or initialize with:
 
 ```bash
+# Create config in current directory
 appsignal config init
+
+# Create config in ~/.config/appsignal-cli/
+appsignal config init --global
+
+# Show current configuration
+appsignal config show
+
+# Set a configuration value
+appsignal config set token your-api-token
+appsignal config set app_id your-app-id
+appsignal config set default_namespace web
+appsignal config set output.format compact
 ```
 
 Config file locations (checked in order):
@@ -56,6 +69,13 @@ Config file locations (checked in order):
 3. `~/.config/appsignal-cli/config.yaml`
 
 ## Usage
+
+### List Applications
+
+```bash
+# List all applications you have access to
+appsignal apps
+```
 
 ### List Incidents
 
@@ -104,6 +124,19 @@ appsignal incidents reopen 123
 ```bash
 # Export incident as markdown for AI bug fixing
 appsignal incidents export 123 -o bug-report.md
+```
+
+### View Error Samples
+
+```bash
+# List recent error samples
+appsignal samples list
+
+# Limit results
+appsignal samples list --limit 10
+
+# Get detailed sample information
+appsignal samples get <sample-id>
 ```
 
 ### Output Formats
