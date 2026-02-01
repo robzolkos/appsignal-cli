@@ -184,6 +184,29 @@ type incidentNode struct {
 	Count              int      `json:"count"`
 }
 
+// parseJSONField handles JSON fields that may be either a JSON string or a direct object
+func parseJSONField(raw json.RawMessage) map[string]any {
+	if len(raw) == 0 {
+		return nil
+	}
+
+	// Try parsing as a map directly
+	var result map[string]any
+	if err := json.Unmarshal(raw, &result); err == nil {
+		return result
+	}
+
+	// Try parsing as a JSON string containing JSON
+	var jsonStr string
+	if err := json.Unmarshal(raw, &jsonStr); err == nil && jsonStr != "" {
+		if err := json.Unmarshal([]byte(jsonStr), &result); err == nil {
+			return result
+		}
+	}
+
+	return nil
+}
+
 func (n incidentNode) toIncident() models.Incident {
 	lastOccurred, _ := time.Parse(time.RFC3339, n.LastOccurredAt)
 	return models.Incident{
@@ -216,12 +239,12 @@ func (n incidentWithSampleNode) toIncident() models.Incident {
 
 // sampleNode represents the GraphQL sample node
 type sampleNode struct {
-	ID          string         `json:"id"`
-	Time        string         `json:"time"`
-	Action      string         `json:"action"`
-	Params      map[string]any `json:"params"`
-	SessionData map[string]any `json:"sessionData"`
-	Revision    string         `json:"revision"`
+	ID          string          `json:"id"`
+	Time        string          `json:"time"`
+	Action      string          `json:"action"`
+	Params      json.RawMessage `json:"params"`
+	SessionData json.RawMessage `json:"sessionData"`
+	Revision    string          `json:"revision"`
 	Environment []struct {
 		Key   string `json:"key"`
 		Value string `json:"value"`
@@ -244,8 +267,8 @@ func (n sampleNode) toSample() models.Sample {
 		ID:          n.ID,
 		Time:        sampleTime,
 		Action:      n.Action,
-		Params:      n.Params,
-		SessionData: n.SessionData,
+		Params:      parseJSONField(n.Params),
+		SessionData: parseJSONField(n.SessionData),
 		Revision:    n.Revision,
 	}
 
