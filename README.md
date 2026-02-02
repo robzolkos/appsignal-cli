@@ -4,21 +4,50 @@ A command-line interface for [AppSignal](https://appsignal.com/) error monitorin
 
 ## Installation
 
-### Homebrew (macOS/Linux)
+**Arch Linux (AUR)**
+```bash
+yay -S appsignal-cli
+```
 
+**macOS/Linux (Homebrew)**
 ```bash
 brew install robzolkos/tap/appsignal-cli
 ```
 
-### Go Install
+**Debian/Ubuntu**
+```bash
+# Download the .deb for your architecture (amd64 or arm64)
+curl -LO https://github.com/robzolkos/appsignal-cli/releases/latest/download/appsignal-cli_VERSION_amd64.deb
+sudo dpkg -i appsignal-cli_VERSION_amd64.deb
+```
 
+**Fedora/RHEL**
+```bash
+# Download the .rpm for your architecture (x86_64 or aarch64)
+curl -LO https://github.com/robzolkos/appsignal-cli/releases/latest/download/appsignal-cli-VERSION-1.x86_64.rpm
+sudo rpm -i appsignal-cli-VERSION-1.x86_64.rpm
+```
+
+**Windows**
+
+Download `appsignal-windows-amd64.exe` from [GitHub Releases](https://github.com/robzolkos/appsignal-cli/releases), rename it to `appsignal.exe`, and add it to your PATH.
+
+**With Go**
 ```bash
 go install github.com/robzolkos/appsignal-cli/cmd/appsignal@latest
 ```
 
-### Binary Download
+**From binary**
 
-Download from [GitHub Releases](https://github.com/robzolkos/appsignal-cli/releases).
+Download the latest release for your platform from [GitHub Releases](https://github.com/robzolkos/appsignal-cli/releases) and add it to your PATH.
+
+**From source**
+```bash
+git clone https://github.com/robzolkos/appsignal-cli.git
+cd appsignal-cli
+go build -o appsignal ./cmd/appsignal
+./appsignal --help
+```
 
 ## Configuration
 
