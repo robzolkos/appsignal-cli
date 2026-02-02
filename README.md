@@ -30,7 +30,7 @@ sudo rpm -i appsignal-cli-VERSION-1.x86_64.rpm
 
 **Windows**
 
-Download `appsignal-windows-amd64.exe` from [GitHub Releases](https://github.com/robzolkos/appsignal-cli/releases), rename it to `appsignal.exe`, and add it to your PATH.
+Download `appsignal-cli-windows-amd64.exe` from [GitHub Releases](https://github.com/robzolkos/appsignal-cli/releases) and add it to your PATH.
 
 **With Go**
 ```bash
@@ -45,8 +45,8 @@ Download the latest release for your platform from [GitHub Releases](https://git
 ```bash
 git clone https://github.com/robzolkos/appsignal-cli.git
 cd appsignal-cli
-go build -o appsignal ./cmd/appsignal
-./appsignal --help
+go build -o appsignal-cli ./cmd/appsignal
+./appsignal-cli --help
 ```
 
 ## Configuration
@@ -77,19 +77,19 @@ Or initialize with:
 
 ```bash
 # Create config in current directory
-appsignal config init
+appsignal-cli config init
 
 # Create config in ~/.config/appsignal-cli/
-appsignal config init --global
+appsignal-cli config init --global
 
 # Show current configuration
-appsignal config show
+appsignal-cli config show
 
 # Set a configuration value
-appsignal config set token your-api-token
-appsignal config set app_id your-app-id
-appsignal config set default_namespace web
-appsignal config set output.format compact
+appsignal-cli config set token your-api-token
+appsignal-cli config set app_id your-app-id
+appsignal-cli config set default_namespace web
+appsignal-cli config set output.format compact
 ```
 
 Config file locations (checked in order):
@@ -103,82 +103,82 @@ Config file locations (checked in order):
 
 ```bash
 # List all applications you have access to
-appsignal apps
+appsignal-cli apps
 ```
 
 ### List Incidents
 
 ```bash
 # List open incidents
-appsignal incidents list
+appsignal-cli incidents list
 
 # Filter by state
-appsignal incidents list --state closed
+appsignal-cli incidents list --state closed
 
 # Filter by namespace
-appsignal incidents list --namespace background
+appsignal-cli incidents list --namespace background
 
 # Filter by date (ISO 8601)
-appsignal incidents list --since 2024-01-15
+appsignal-cli incidents list --since 2024-01-15
 
 # Filter by minimum occurrences
-appsignal incidents list --min-occurrences 10
+appsignal-cli incidents list --min-occurrences 10
 
 # Pagination
-appsignal incidents list --limit 50 --offset 25
+appsignal-cli incidents list --limit 50 --offset 25
 ```
 
 ### Get Incident Details
 
 ```bash
 # Get incident with sample/backtrace
-appsignal incidents get 123
+appsignal-cli incidents get 123
 
 # With verbose output (includes params, session data)
-appsignal --verbose incidents get 123
+appsignal-cli --verbose incidents get 123
 ```
 
 ### Manage Incidents
 
 ```bash
 # Close an incident
-appsignal incidents close 123
+appsignal-cli incidents close 123
 
 # Reopen an incident
-appsignal incidents reopen 123
+appsignal-cli incidents reopen 123
 ```
 
 ### Export to Markdown
 
 ```bash
 # Export incident as markdown for AI bug fixing
-appsignal incidents export 123 -o bug-report.md
+appsignal-cli incidents export 123 -o bug-report.md
 ```
 
 ### View Error Samples
 
 ```bash
 # List recent error samples
-appsignal samples list
+appsignal-cli samples list
 
 # Limit results
-appsignal samples list --limit 10
+appsignal-cli samples list --limit 10
 
 # Get detailed sample information
-appsignal samples get <sample-id>
+appsignal-cli samples get <sample-id>
 ```
 
 ### Output Formats
 
 ```bash
 # Human-readable (default)
-appsignal incidents list
+appsignal-cli incidents list
 
 # JSON (for scripting)
-appsignal --json incidents list
+appsignal-cli --json incidents list
 
 # Compact (minimal tokens for LLMs)
-appsignal --compact incidents list
+appsignal-cli --compact incidents list
 ```
 
 ## Output Examples

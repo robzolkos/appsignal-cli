@@ -139,7 +139,7 @@ func TestSampleNodeToSample(t *testing.T) {
 		Time:     "2024-01-15T14:30:00Z",
 		Action:   "UsersController#show",
 		Revision: "abc123",
-		Params:   map[string]any{"id": "42"},
+		Params:   json.RawMessage(`{"id": "42"}`),
 		Exception: &struct {
 			Name      string `json:"name"`
 			Message   string `json:"message"`

@@ -28,7 +28,7 @@ jobs:
         run: go vet ./...
 
       - name: Build
-        run: go build -o bin/appsignal ./cmd/appsignal
+        run: go build -o bin/appsignal-cli ./cmd/appsignal
 
       - name: Verify binary runs
-        run: ./bin/appsignal --help
+        run: ./bin/appsignal-cli --help

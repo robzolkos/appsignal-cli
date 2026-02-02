@@ -1,6 +1,6 @@
 .PHONY: test test-unit test-e2e build clean tidy lint help
 
-BINARY := $(CURDIR)/bin/appsignal
+BINARY := $(CURDIR)/bin/appsignal-cli
 VERSION ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo dev)
 LDFLAGS := -X main.version=$(VERSION)
 
@@ -57,4 +57,4 @@ tidy:
 
 # Install locally
 install: build
-	cp $(BINARY) $(GOPATH)/bin/appsignal
+	cp $(BINARY) $(GOPATH)/bin/appsignal-cli
