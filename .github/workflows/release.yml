@@ -44,7 +44,7 @@ jobs:
           EXT: ${{ matrix.ext }}
         run: |
           mkdir -p dist
-          go build -trimpath -ldflags "-s -w -X main.version=${VERSION}" -o "dist/appsignal-${GOOS}-${GOARCH}${EXT}" ./cmd/appsignal
+          go build -trimpath -ldflags "-s -w -X main.version=${VERSION}" -o "dist/appsignal-cli-${GOOS}-${GOARCH}${EXT}" ./cmd/appsignal
 
       - name: Checksums
         env:
@@ -53,13 +53,13 @@ jobs:
           EXT: ${{ matrix.ext }}
         run: |
           cd dist
-          sha256sum "appsignal-${GOOS}-${GOARCH}${EXT}" > "SHA256SUMS-${GOOS}-${GOARCH}.txt"
+          sha256sum "appsignal-cli-${GOOS}-${GOARCH}${EXT}" > "SHA256SUMS-${GOOS}-${GOARCH}.txt"
 
       - name: Upload assets to release
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            dist/appsignal-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.ext }}
+            dist/appsignal-cli-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.ext }}
             dist/SHA256SUMS-${{ matrix.goos }}-${{ matrix.goarch }}.txt
 
   build-packages:
@@ -87,8 +87,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           VERSION=${GITHUB_REF_NAME#v}
-          curl -sL "https://github.com/robzolkos/appsignal-cli/releases/download/v${VERSION}/appsignal-linux-${{ matrix.goarch }}" -o appsignal
-          chmod +x appsignal
+          curl -sL "https://github.com/robzolkos/appsignal-cli/releases/download/v${VERSION}/appsignal-cli-linux-${{ matrix.goarch }}" -o appsignal-cli
+          chmod +x appsignal-cli
 
       - name: Build .deb package
         run: |
@@ -99,7 +99,7 @@ jobs:
           mkdir -p "${PKG_ROOT}/usr/bin"
           mkdir -p "${PKG_ROOT}/usr/share/doc/appsignal-cli"
 
-          cp appsignal "${PKG_ROOT}/usr/bin/appsignal"
+          cp appsignal-cli "${PKG_ROOT}/usr/bin/appsignal-cli"
           cp LICENSE "${PKG_ROOT}/usr/share/doc/appsignal-cli/copyright"
 
           cat > "${PKG_ROOT}/DEBIAN/control" << EOF
@@ -126,7 +126,7 @@ jobs:
           mkdir -p rpmbuild/BUILDROOT/appsignal-cli-${VERSION}-1.${{ matrix.rpm_arch }}/usr/bin
           mkdir -p rpmbuild/BUILDROOT/appsignal-cli-${VERSION}-1.${{ matrix.rpm_arch }}/usr/share/licenses/appsignal-cli
 
-          cp appsignal rpmbuild/BUILDROOT/appsignal-cli-${VERSION}-1.${{ matrix.rpm_arch }}/usr/bin/appsignal
+          cp appsignal-cli rpmbuild/BUILDROOT/appsignal-cli-${VERSION}-1.${{ matrix.rpm_arch }}/usr/bin/appsignal-cli
           cp LICENSE rpmbuild/BUILDROOT/appsignal-cli-${VERSION}-1.${{ matrix.rpm_arch }}/usr/share/licenses/appsignal-cli/LICENSE
 
           cat > rpmbuild/SPECS/appsignal-cli.spec << EOF
@@ -142,7 +142,7 @@ jobs:
 
           %files
           %license /usr/share/licenses/appsignal-cli/LICENSE
-          /usr/bin/appsignal
+          /usr/bin/appsignal-cli
           EOF
 
           rpmbuild --define "_topdir $(pwd)/rpmbuild" \
@@ -195,12 +195,12 @@ jobs:
               export CGO_CXXFLAGS="${CXXFLAGS}"
               export CGO_LDFLAGS="${LDFLAGS}"
               export GOFLAGS="-buildmode=pie -trimpath -mod=readonly -modcacherw"
-              go build -ldflags "-s -w -X main.version=${pkgver}" -o appsignal ./cmd/appsignal
+              go build -ldflags "-s -w -X main.version=${pkgver}" -o appsignal-cli ./cmd/appsignal
           }
 
           package() {
               cd "$pkgname-$pkgver"
-              install -Dm755 appsignal "$pkgdir/usr/bin/appsignal"
+              install -Dm755 appsignal-cli "$pkgdir/usr/bin/appsignal-cli"
               install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
           }
           EOF
@@ -250,35 +250,35 @@ jobs:
 
             on_macos do
               if Hardware::CPU.arm?
-                url "https://github.com/robzolkos/appsignal-cli/releases/download/v#{version}/appsignal-darwin-arm64"
+                url "https://github.com/robzolkos/appsignal-cli/releases/download/v#{version}/appsignal-cli-darwin-arm64"
                 sha256 "SHA256_ARM64_PLACEHOLDER"
               else
-                url "https://github.com/robzolkos/appsignal-cli/releases/download/v#{version}/appsignal-darwin-amd64"
+                url "https://github.com/robzolkos/appsignal-cli/releases/download/v#{version}/appsignal-cli-darwin-amd64"
                 sha256 "SHA256_AMD64_PLACEHOLDER"
               end
             end
 
             on_linux do
               if Hardware::CPU.arm?
-                url "https://github.com/robzolkos/appsignal-cli/releases/download/v#{version}/appsignal-linux-arm64"
+                url "https://github.com/robzolkos/appsignal-cli/releases/download/v#{version}/appsignal-cli-linux-arm64"
                 sha256 "SHA256_LINUX_ARM64_PLACEHOLDER"
               else
-                url "https://github.com/robzolkos/appsignal-cli/releases/download/v#{version}/appsignal-linux-amd64"
+                url "https://github.com/robzolkos/appsignal-cli/releases/download/v#{version}/appsignal-cli-linux-amd64"
                 sha256 "SHA256_LINUX_AMD64_PLACEHOLDER"
               end
             end
 
             def install
               if OS.mac?
-                binary_name = Hardware::CPU.arm? ? "appsignal-darwin-arm64" : "appsignal-darwin-amd64"
+                binary_name = Hardware::CPU.arm? ? "appsignal-cli-darwin-arm64" : "appsignal-cli-darwin-amd64"
               else
-                binary_name = Hardware::CPU.arm? ? "appsignal-linux-arm64" : "appsignal-linux-amd64"
+                binary_name = Hardware::CPU.arm? ? "appsignal-cli-linux-arm64" : "appsignal-cli-linux-amd64"
               end
-              bin.install binary_name => "appsignal"
+              bin.install binary_name => "appsignal-cli"
             end
 
             test do
-              assert_match version.to_s, shell_output("#{bin}/appsignal --version")
+              assert_match version.to_s, shell_output("#{bin}/appsignal-cli --version")
             end
           end
           FORMULA

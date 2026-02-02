@@ -38,7 +38,7 @@ func TestMain(m *testing.M) {
 	}
 	defer os.RemoveAll(tmpDir)
 
-	binaryPath = filepath.Join(tmpDir, "appsignal")
+	binaryPath = filepath.Join(tmpDir, "appsignal-cli")
 	cmd := exec.Command("go", "build", "-o", binaryPath, "../cmd/appsignal")
 	if output, err := cmd.CombinedOutput(); err != nil {
 		fmt.Println("Failed to build:", string(output))
@@ -73,7 +73,7 @@ func TestVersion(t *testing.T) {
 		t.Fatalf("--version failed: %v", err)
 	}
 
-	if !strings.Contains(stdout, "appsignal version") {
+	if !strings.Contains(stdout, "appsignal-cli version") {
 		t.Errorf("Unexpected version output: %s", stdout)
 	}
 }

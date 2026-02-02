@@ -2,12 +2,12 @@
 name: appsignal
 description: Fetch and analyze AppSignal error incidents. Use when debugging errors, investigating exceptions, or when the user mentions AppSignal, incidents, or error monitoring.
 argument-hint: "[incidents|samples] [command] [options]"
-allowed-tools: Bash(appsignal *)
+allowed-tools: Bash(appsignal-cli *)
 ---
 
 # AppSignal CLI
 
-Use the `appsignal` CLI to fetch error incidents and samples from AppSignal for debugging and analysis.
+Use the `appsignal-cli` CLI to fetch error incidents and samples from AppSignal for debugging and analysis.
 
 ## Prerequisites
 
@@ -19,62 +19,62 @@ Ensure `APPSIGNAL_TOKEN` and `APPSIGNAL_APP_ID` environment variables are set, o
 
 ```bash
 # List open incidents
-appsignal incidents list
+appsignal-cli incidents list
 
 # Get details for a specific incident
-appsignal incidents get <number>
+appsignal-cli incidents get <number>
 ```
 
 ### Filter Incidents
 
 ```bash
 # By state: open, closed, wip
-appsignal incidents list --state open
+appsignal-cli incidents list --state open
 
 # By namespace: web, background, frontend
-appsignal incidents list --namespace web
+appsignal-cli incidents list --namespace web
 
 # By date (ISO 8601)
-appsignal incidents list --since 2024-01-15
+appsignal-cli incidents list --since 2024-01-15
 
 # By minimum occurrences
-appsignal incidents list --min-occurrences 10
+appsignal-cli incidents list --min-occurrences 10
 
 # Combine filters
-appsignal incidents list --namespace background --min-occurrences 5
+appsignal-cli incidents list --namespace background --min-occurrences 5
 ```
 
 ### Get Detailed Error Information
 
 ```bash
 # Standard detail view
-appsignal incidents get <number>
+appsignal-cli incidents get <number>
 
 # With params and session data
-appsignal --verbose incidents get <number>
+appsignal-cli --verbose incidents get <number>
 
 # Export as markdown for analysis
-appsignal incidents export <number> -o error-report.md
+appsignal-cli incidents export <number> -o error-report.md
 ```
 
 ### Work with Error Samples
 
 ```bash
 # List recent error samples
-appsignal samples list --limit 10
+appsignal-cli samples list --limit 10
 
 # Get full sample details (params, session, environment)
-appsignal samples get <sample-id>
+appsignal-cli samples get <sample-id>
 ```
 
 ### Manage Incidents
 
 ```bash
 # Close a resolved incident
-appsignal incidents close <number>
+appsignal-cli incidents close <number>
 
 # Reopen if issue recurs
-appsignal incidents reopen <number>
+appsignal-cli incidents reopen <number>
 ```
 
 ## Output Formats
@@ -82,14 +82,14 @@ appsignal incidents reopen <number>
 Use `--compact` for token-efficient output when analyzing errors:
 
 ```bash
-appsignal --compact incidents list
-appsignal --compact incidents get <number>
+appsignal-cli --compact incidents list
+appsignal-cli --compact incidents get <number>
 ```
 
 Use `--json` for structured data:
 
 ```bash
-appsignal --json incidents list
+appsignal-cli --json incidents list
 ```
 
 ## Debugging Steps

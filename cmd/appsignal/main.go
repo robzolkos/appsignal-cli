@@ -13,7 +13,7 @@ var version = "dev"
 
 func main() {
 	app := &cli.App{
-		Name:    "appsignal",
+		Name:    "appsignal-cli",
 		Usage:   "CLI for AppSignal error monitoring",
 		Version: version,
 		Flags: []cli.Flag{
